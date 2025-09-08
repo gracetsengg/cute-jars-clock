@@ -2,25 +2,27 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cute Jars Clock</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.js"></script>
+  <!-- Link to p5.js library -->
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.7.0/lib/p5.min.js"></script>
+  <!-- Optional: p5.dom for extra UI (not used here but useful for extensions) -->
+  <!-- <script src="https://cdn.jsdelivr.net/npm/p5@1.7.0/lib/addons/p5.dom.min.js"></script> -->
   <style>
     body {
       margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center; /* horizontal center */
-      align-items: center;     /* vertical center */
-      height: 100vh;           /* full viewport height */
-      background-color: #fff;  /* fallback background */
+      overflow: hidden;
+      background-color: #f5f5f5;
+      font-family: Arial, sans-serif;
     }
     canvas {
-      /* optional: add shadow or border if you want */
       display: block;
+      margin: 0 auto;
     }
   </style>
 </head>
 <body>
+  <!-- Your sketch.js file -->
   <script src="sketch.js"></script>
 </body>
 </html>
