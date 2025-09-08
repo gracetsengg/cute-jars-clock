@@ -132,7 +132,7 @@ function drawJar(cx, cy, w, h, col, label, value, maxVal) {
   
   // Make label wider for MINUTES and SECONDS
   let labelWidth = label === "HOURS" ? w * 0.5 : w * 0.7;  // wider for MINUTES/SECONDS
-  rect(w * 0.55, -h / 2 + 25, labelWidth, 25, 5);
+  rect(w * 0.7, -h / 2 + 25, labelWidth, 25, 5);
   
   fill(50);
   textSize(11);
