@@ -135,7 +135,7 @@ function drawJar(cx, cy, w, h, col, label, value, maxVal) {
   rect(w * 0.55, -h / 2 + 25, labelWidth, 25, 5);
   
   fill(50);
-  textSize(12);
+  textSize(11);
   text(label, w * 0.55, -h / 2 + 25);
 
 
