@@ -13,9 +13,6 @@ function setup() {
   canvas = createCanvas(windowWidth * 0.9, windowHeight * 0.7);
   canvas.style('display', 'block');
 
-  // Center canvas
-  centerCanvas();
-
   // Initialize sparkles
   for (let i = 0; i < 50; i++) {
     sparkleParticles.push({
