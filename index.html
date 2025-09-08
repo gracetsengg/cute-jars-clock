@@ -6,13 +6,16 @@
   <!-- p5.js library -->
   <script src="https://cdn.jsdelivr.net/npm/p5@1.6.0/lib/p5.min.js"></script>
   <style>
-    body {
+    html, body {
       margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      background: #E75480; /* fallback background */
+      background: #E75480;
+      overflow: hidden;
     }
     canvas {
       display: block;
@@ -20,7 +23,6 @@
   </style>
 </head>
 <body>
-  <!-- Include your sketch -->
   <script src="sketch.js"></script>
 </body>
 </html>
