@@ -12,9 +12,6 @@ function setup() {
   // Create responsive canvas
   canvas = createCanvas(windowWidth * 0.9, windowHeight * 0.7);
   canvas.style('display', 'block');
-  rectMode(CENTER);
-  textAlign(CENTER, CENTER);
-  textSize(24);
 
   // Center canvas
   centerCanvas();
