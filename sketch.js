@@ -6,15 +6,20 @@ let minutesArr = [];
 let secondsArr = [];
 let lastMinute = -1;
 let sparkleParticles = [];
+let canvas;
 
 function setup() {
-  // Create canvas and set rectangle/text alignment
-  let cnv = createCanvas(750, 500);
+  // Create responsive canvas
+  canvas = createCanvas(windowWidth * 0.9, windowHeight * 0.7);
+  canvas.style('display', 'block');
   rectMode(CENTER);
   textAlign(CENTER, CENTER);
   textSize(24);
 
-  // Initialize background sparkles
+  // Center canvas
+  centerCanvas();
+
+  // Initialize sparkles
   for (let i = 0; i < 50; i++) {
     sparkleParticles.push({
       x: random(width),
@@ -26,17 +31,16 @@ function setup() {
 }
 
 function draw() {
-  // Draw gradient background
   drawGradientBackground();
 
-  // Draw sparkles
+  // Sparkles
   for (let p of sparkleParticles) {
     noStroke();
     fill(255, 255, 255, p.alpha);
     ellipse(p.x, p.y, p.size);
   }
 
-  // Get current time
+  // Current time
   let rawH = hour();
   let h = rawH % 12;
   if (h === 0) h = 12;
@@ -44,30 +48,29 @@ function draw() {
   let s = second();
   let ampm = rawH >= 12 ? "PM" : "AM";
 
-  // Log minute changes for debug
   if (m !== lastMinute) {
     console.log("Minute changed:", m);
     lastMinute = m;
   }
 
   let jarY = height / 2;
+  let spacing = width / 4;
 
-  // Draw jars with colors and labels
-  drawJar(150, jarY, 180, 280, color(100, 180, 255), "HOURS", h, 12);           // Hours: cyan-blue
-  drawJar(375, jarY, 180, 280, color(0, 180, 200), "MINUTES", m, 60, 80);      // Minutes: teal, wider label
-  drawJar(600, jarY, 180, 280, color(255, 120, 160), "SECONDS", s, 60, 80);    // Seconds: coral, wider label
+  // Draw jars
+  drawJar(spacing, jarY, 180, 280, color(100, 180, 255), "HOURS", h, 12);
+  drawJar(spacing * 2, jarY, 180, 280, color(0, 180, 200), "MINUTES", m, 60, 80);
+  drawJar(spacing * 3, jarY, 180, 280, color(255, 120, 160), "SECONDS", s, 60, 80);
 
-  // Update bouncing symbols arrays
-  adjustArray(hoursArr, h, "X", 150, jarY, 180, 280);
-  adjustArray(minutesArr, m, "O", 375, jarY, 180, 280);
-  adjustArray(secondsArr, s, ".", 600, jarY, 180, 280);
+  // Bouncing symbols
+  adjustArray(hoursArr, h, "X", spacing, jarY, 180, 280);
+  adjustArray(minutesArr, m, "O", spacing * 2, jarY, 180, 280);
+  adjustArray(secondsArr, s, ".", spacing * 3, jarY, 180, 280);
 
-  // Draw bouncing symbols
   updateAndDraw(hoursArr, color(100, 180, 255));
   updateAndDraw(minutesArr, color(0, 180, 200));
-  updateAndDraw(secondsArr, color(180, 60, 90)); // Darker seconds
+  updateAndDraw(secondsArr, color(180, 60, 90));
 
-  // Draw digital clock at bottom
+  // Digital clock
   fill(40);
   noStroke();
   textSize(28);
@@ -76,10 +79,19 @@ function draw() {
   text(`${h}:${displayM}:${displayS} ${ampm}`, width / 2, height - 40);
 }
 
+function windowResized() {
+  resizeCanvas(windowWidth * 0.9, windowHeight * 0.7);
+  centerCanvas();
+}
+
+function centerCanvas() {
+  canvas.position((windowWidth - width) / 2, (windowHeight - height) / 2);
+}
+
 // Draw background gradient
 function drawGradientBackground() {
-  let topColor = color(239, 84, 130);   // lighter pink
-  let bottomColor = color(231, 84, 128); // #E75480
+  let topColor = color(239, 84, 130);
+  let bottomColor = color(231, 84, 128);
   for (let y = 0; y < height; y++) {
     let inter = map(y, 0, height, 0, 1);
     let c = lerpColor(topColor, bottomColor, inter);
@@ -88,21 +100,14 @@ function drawGradientBackground() {
   }
 }
 
-// Draw a single jar with liquid, lid, tag, and shine
-// cx, cy = center coordinates
-// w, h = width and height
-// col = main color
-// label = string for tag
-// value = current value (hour, minute, second)
-// maxVal = max value of jar
-// tagWidth = width of label rectangle (default 50)
+// Draw a single jar with liquid, lid, label, shine
 function drawJar(cx, cy, w, h, col, label, value, maxVal, tagWidth = 50) {
   push();
   translate(cx, cy);
 
   col.setAlpha(180);
 
-  // Animated liquid inside jar
+  // Animated liquid
   let t = millis() * 0.002;
   let level = map(value, 0, maxVal, h / 2 - 20, -h / 2 + 50);
   fill(red(col)+20, green(col)+20, blue(col)+20, 180);
@@ -128,7 +133,7 @@ function drawJar(cx, cy, w, h, col, label, value, maxVal, tagWidth = 50) {
   fill(200, 180, 220);
   rect(0, -h / 2, w * 0.7, 6);
 
-  // Label tag
+  // Label
   stroke(120);
   line(w * 0.35, -h / 2 + 5, w * 0.5, -h / 2 + 25);
   fill(255, 240, 200);
@@ -152,7 +157,7 @@ function adjustArray(arr, target, symbol, cx, cy, w, h) {
   while (arr.length > target) arr.pop();
 }
 
-// Draw each symbol in the array
+// Draw each symbol
 function updateAndDraw(arr, col) {
   for (let b of arr) {
     b.update();
@@ -160,7 +165,7 @@ function updateAndDraw(arr, col) {
   }
 }
 
-// Class for bouncing symbols inside jars
+// Class for bouncing symbols
 class Bouncer {
   constructor(symbol, cx, cy, w, h) {
     this.symbol = symbol;
@@ -175,7 +180,6 @@ class Bouncer {
     this.angle = random(TWO_PI);
   }
 
-  // Update position and angle
   update() {
     this.x += this.vx;
     this.y += this.vy;
@@ -184,7 +188,6 @@ class Bouncer {
     if (this.y < this.top || this.y > this.bottom) this.vy *= -1;
   }
 
-  // Draw symbol
   display(col) {
     push();
     translate(this.x, this.y);
