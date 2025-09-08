@@ -3,21 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <title>Cute Jars Clock</title>
-  <!-- p5.js library -->
-  <script src="https://cdn.jsdelivr.net/npm/p5@1.6.0/lib/p5.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.js"></script>
   <style>
-    html, body {
+    body {
       margin: 0;
       padding: 0;
-      height: 100%;
-      width: 100%;
       display: flex;
-      justify-content: center;
-      align-items: center;
-      background: #E75480;
-      overflow: hidden;
+      justify-content: center; /* horizontal center */
+      align-items: center;     /* vertical center */
+      height: 100vh;           /* full viewport height */
+      background-color: #fff;  /* fallback background */
     }
     canvas {
+      /* optional: add shadow or border if you want */
       display: block;
     }
   </style>
