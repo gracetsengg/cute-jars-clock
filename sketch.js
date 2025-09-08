@@ -9,10 +9,15 @@ let sparkleParticles = [];
 
 // Setup function runs once at the start
 function setup() {
-  createCanvas(750, 500);  // Initialize canvas
-  rectMode(CENTER);         // Draw rectangles from their center
-  textAlign(CENTER, CENTER); 
+  createCanvas(750, 500);
+  rectMode(CENTER);
+  textAlign(CENTER, CENTER);
   textSize(24);
+  // center the canvas using parent
+  let cnv = createCanvas(750, 500);
+  cnv.parent(document.body);
+}
+
 
   // Populate sparkle particles array for visual effect
   for (let i = 0; i < 50; i++) {
