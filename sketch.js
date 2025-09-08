@@ -18,7 +18,6 @@ function setup() {
   cnv.parent(document.body);
 }
 
-
   // Populate sparkle particles array for visual effect
   for (let i = 0; i < 50; i++) {
     sparkleParticles.push({
@@ -125,15 +124,20 @@ function drawJar(cx, cy, w, h, col, label, value, maxVal) {
   fill(200, 180, 220);
   rect(0, -h / 2, w * 0.7, 6);
 
-  // Draw label tag
+  // Paper label tag
   stroke(120);
   line(w * 0.35, -h / 2 + 5, w * 0.5, -h / 2 + 25);
   fill(255, 240, 200);
   noStroke();
-  rect(w * 0.55, -h / 2 + 25, 50, 25, 5);
+  
+  // Make label wider for MINUTES and SECONDS
+  let labelWidth = label === "HOURS" ? w * 0.5 : w * 0.7;  // wider for MINUTES/SECONDS
+  rect(w * 0.55, -h / 2 + 25, labelWidth, 25, 5);
+  
   fill(50);
   textSize(12);
   text(label, w * 0.55, -h / 2 + 25);
+
 
   // Draw shine effect on jar
   noStroke();
