@@ -1,20 +1,16 @@
-// Global arrays to hold symbols representing hours, minutes, and seconds
 let hoursArr = [];
 let minutesArr = [];
 let secondsArr = [];
-let lastMinute = -1;  // Tracks the last minute to detect minute changes
+let lastMinute = -1;
 
-// Array for sparkle particles in the background
 let sparkleParticles = [];
 
-// Setup function runs once at the start
 function setup() {
-  createCanvas(750, 500);  // Initialize canvas
-  rectMode(CENTER);         // Draw rectangles from their center
-  textAlign(CENTER, CENTER); 
+  let cnv = createCanvas(750, 500);
+  rectMode(CENTER);
+  textAlign(CENTER, CENTER);
   textSize(24);
 
-  // Populate sparkle particles array for visual effect
   for (let i = 0; i < 50; i++) {
     sparkleParticles.push({
       x: random(width),
@@ -25,49 +21,43 @@ function setup() {
   }
 }
 
-// Draw function runs continuously, refreshing the canvas
 function draw() {
-  drawGradientBackground();  // Render gradient background
+  drawGradientBackground();
 
-  // Render sparkle particles
+  // Draw sparkles
   for (let p of sparkleParticles) {
     noStroke();
     fill(255, 255, 255, p.alpha);
     ellipse(p.x, p.y, p.size);
   }
 
-  // Get current time values
-  let rawH = hour();        
-  let h = rawH % 12;        
-  if (h === 0) h = 12;       // Convert midnight/noon to 12-hour format
+  let rawH = hour();
+  let h = rawH % 12;
+  if (h === 0) h = 12;
   let m = minute();
   let s = second();
   let ampm = rawH >= 12 ? "PM" : "AM";
 
-  // Log minute changes for debugging or triggers
   if (m !== lastMinute) {
     console.log("Minute changed:", m);
     lastMinute = m;
   }
 
-  let jarY = height / 2;  // Vertical center position for jars
+  let jarY = height / 2;
 
-  // Draw jars for hours, minutes, and seconds with distinct colors
+  // Draw jars
   drawJar(150, jarY, 180, 280, color(100, 180, 255), "HOURS", h, 12);
   drawJar(375, jarY, 180, 280, color(0, 180, 200), "MINUTES", m, 60);
   drawJar(600, jarY, 180, 280, color(255, 120, 160), "SECONDS", s, 60);
 
-  // Adjust symbol arrays to match current time values
   adjustArray(hoursArr, h, "X", 150, jarY, 180, 280);
   adjustArray(minutesArr, m, "O", 375, jarY, 180, 280);
   adjustArray(secondsArr, s, ".", 600, jarY, 180, 280);
 
-  // Update and render bouncing symbols in each jar
-  updateAndDraw(hoursArr, color(100, 180, 255));  
-  updateAndDraw(minutesArr, color(0, 180, 200));  
-  updateAndDraw(secondsArr, color(180, 60, 90));  
+  updateAndDraw(hoursArr, color(100, 180, 255));
+  updateAndDraw(minutesArr, color(0, 180, 200));
+  updateAndDraw(secondsArr, color(180, 60, 90)); // darker seconds
 
-  // Draw digital clock at the bottom of the canvas
   fill(40);
   noStroke();
   textSize(28);
@@ -76,10 +66,10 @@ function draw() {
   text(`${h}:${displayM}:${displayS} ${ampm}`, width / 2, height - 40);
 }
 
-// Draw a vertical gradient background from top to bottom
+// ---------- Background ----------
 function drawGradientBackground() {
-  let topColor = color(239, 84, 130, 255);  
-  let bottomColor = color(231, 84, 128, 255); 
+  let topColor = color(239, 84, 130);   // lighter pink
+  let bottomColor = color(231, 84, 128); // #E75480
   for (let y = 0; y < height; y++) {
     let inter = map(y, 0, height, 0, 1);
     let c = lerpColor(topColor, bottomColor, inter);
@@ -88,39 +78,40 @@ function drawGradientBackground() {
   }
 }
 
-// Draw a jar representing a time unit with liquid level and label
+// ---------- Cute Jar ----------
 function drawJar(cx, cy, w, h, col, label, value, maxVal) {
   push();
   translate(cx, cy);
+
   col.setAlpha(180);
 
-  // Compute liquid level based on current value
+  // Liquid
   let t = millis() * 0.002;
   let level = map(value, 0, maxVal, h / 2 - 20, -h / 2 + 50);
-  fill(red(col)+20, green(col)+20, blue(col)+20, 180); 
+  fill(red(col)+20, green(col)+20, blue(col)+20, 180);
   noStroke();
   beginShape();
   for (let x = -w / 2 + 15; x <= w / 2 - 15; x += 2) {
-    let y = level + sin(x * 0.08 + t) * 4;  // Wavy liquid effect
+    let y = level + sin(x * 0.08 + t) * 4;
     vertex(x, y);
   }
   vertex(w / 2 - 15, h / 2 - 15);
   vertex(-w / 2 + 15, h / 2 - 15);
   endShape(CLOSE);
 
-  // Draw semi-transparent jar body
+  // Jar body
   stroke(180);
   strokeWeight(2.5);
   fill(255, 90);
   rect(0, 0, w, h, 60);
 
-  // Draw lid
+  // Lid
   fill(230);
   rect(0, -h / 2, w * 0.7, 18, 8);
   fill(200, 180, 220);
   rect(0, -h / 2, w * 0.7, 6);
 
-  // Draw label tag
+  // Tag
   stroke(120);
   line(w * 0.35, -h / 2 + 5, w * 0.5, -h / 2 + 25);
   fill(255, 240, 200);
@@ -130,7 +121,7 @@ function drawJar(cx, cy, w, h, col, label, value, maxVal) {
   textSize(12);
   text(label, w * 0.55, -h / 2 + 25);
 
-  // Draw shine effect on jar
+  // Shine
   noStroke();
   fill(255, 120);
   ellipse(-w / 4, 0, 25, h * 0.6);
@@ -138,17 +129,12 @@ function drawJar(cx, cy, w, h, col, label, value, maxVal) {
   pop();
 }
 
-// Ensure symbol arrays match current time values
+// ---------- Symbol Management ----------
 function adjustArray(arr, target, symbol, cx, cy, w, h) {
-  while (arr.length < target) {
-    arr.push(new Bouncer(symbol, cx, cy, w, h));
-  }
-  while (arr.length > target) {
-    arr.pop();
-  }
+  while (arr.length < target) arr.push(new Bouncer(symbol, cx, cy, w, h));
+  while (arr.length > target) arr.pop();
 }
 
-// Update and render all bouncing symbols in the array
 function updateAndDraw(arr, col) {
   for (let b of arr) {
     b.update();
@@ -156,7 +142,7 @@ function updateAndDraw(arr, col) {
   }
 }
 
-// Class representing a bouncing symbol inside a jar
+// ---------- Bouncer ----------
 class Bouncer {
   constructor(symbol, cx, cy, w, h) {
     this.symbol = symbol;
@@ -171,7 +157,6 @@ class Bouncer {
     this.angle = random(TWO_PI);
   }
 
-  // Update position and rotation of symbol
   update() {
     this.x += this.vx;
     this.y += this.vy;
@@ -180,7 +165,6 @@ class Bouncer {
     if (this.y < this.top || this.y > this.bottom) this.vy *= -1;
   }
 
-  // Render the symbol based on its type
   display(col) {
     push();
     translate(this.x, this.y);
