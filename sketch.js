@@ -1,11 +1,5 @@
 // Cute Jars Clock (p5.js)
 // Author: Grace Tseng
-// Features:
-// - Hours, Minutes, Seconds jars with bouncing symbols
-// - Teal minutes jar
-// - Darker seconds bouncers
-// - Pink-magenta gradient background (#E75480)
-// - Centered canvas for GitHub Pages
 
 let hoursArr = [];
 let minutesArr = [];
